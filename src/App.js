@@ -7,12 +7,12 @@ function App() {
 
   useEffect(() => {
     axios
-      .get('https://api.themoviedb.org/3/movie/550?api_key=cc4f4d6b8edecb3b07602887dd0f9f9f')
-      // .get('https://api.themoviedb.org/3/movie/550?', {
-      //   headers: {
-      //     Authorization: 'cc4f4d6b8edecb3b07602887dd0f9f9f',
-      //   },
-      // })
+      // .get('https://api.themoviedb.org/3/movie/550?api_key=cc4f4d6b8edecb3b07602887dd0f9f9f')
+      .get('https://developers.themoviedb.org/3/trending/', {
+        headers: {
+          api_key: 'ccz4f4d6b8edecb3b07602887dd0f9f9f',
+        },
+      })
       .then(response => {
         console.log(response);
         // console.log(response.data.original_title);
@@ -25,9 +25,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        <p>Edit and save to reload.</p>
         <a
           className="App-link"
           href="https://reactjs.org"

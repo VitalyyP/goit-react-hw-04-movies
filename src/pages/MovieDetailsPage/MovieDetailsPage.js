@@ -1,61 +1,80 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { FetchMovieDetails } from '../../services/Api';
+import Cast from '../Cast';
+import Reviews from '../Reviews';
+import Button from '../../components/Button';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import MoviesPage from '../MoviesPage';
 import s from './MovieDetailsPage.module.css';
 
-const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w400';
 
-const MovieDetailsPage = ({ match }) => {
-  const [movie, setMovie] = useState({});
+const MovieDetailsPage = ({ match, history, location }) => {
+  const [movie, setMovie] = useState(null);
   const movieId = match.params.url;
 
   useEffect(() => {
-    // axios
-    //   .get(`${BASE_URL}/movie/${movieId}`, {
-    //     params: {
-    //       api_key: 'cc4f4d6b8edecb3b07602887dd0f9f9f',
-    //     },
-    //   })
-    //   .then(response => {
-    //     setMovie(response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //   });
-
-    FetchMovieDetails(movieId).then(data => {
-      setMovie(data);
+    FetchMovieDetails(movieId).then(response => {
+      setMovie(response);
     });
 
     return () => {};
   }, [movieId]);
 
-  console.log(movie);
-  console.log(movie.genres);
-  // const { id } = this.props.match.params;
+  const goBack = () => {
+    history.push(location?.state?.from ?? '/');
+  };
+
   return (
-    <>
-      <img src={`${IMAGE_URL}${movie.poster_path}`} alt={movie.title} />
-      <h1>
-        {movie.title} ({movie.release_date})
-      </h1>
-      <p>User score: {movie.vote_average}</p>
-      <h2>Overview</h2>
-      <p>{movie.overview}</p>
-      <h2>Genres</h2>
-      {/* <ul className={s.list}>
-        {movie.genres.map(i => {
-          return (
-            <li className={s.item} key={i.id}>
-              {i.name}
-            </li>
-          );
-        })}
-      </ul> */}
-    </>
+    movie && (
+      <div className={s.containerWithPadding}>
+        <Button handleClick={goBack} />
+
+        <div className={s.container}>
+          <img
+            src={`${IMAGE_URL}${movie.poster_path}`}
+            alt={movie.title}
+            width="360"
+            height="480"
+          />
+          <div className={s.containerWithPadding}>
+            <h1>{movie.title}</h1>
+            <p>User score: {movie.vote_average}</p>
+            <h2>Overview</h2>
+            <p>{movie.overview}</p>
+            <div className={s.genres}>
+              <h2>Genres: </h2>
+              <ul className={s.list}>
+                {movie.genres.map(i => {
+                  return (
+                    <li className={s.item} key={i.id}>
+                      {i.name}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <h3>Additional information</h3>
+        <ul>
+          <li>
+            <Link to={`${match.url}/cast`}>Cast</Link>
+          </li>
+          <li>
+            <Link to={`${match.url}/reviews`}>Reviews</Link>
+          </li>
+        </ul>
+        <hr />
+        <Suspense fallback={<h1>Загрузка дополнительной информации о фильме...</h1>}>
+          <Switch>
+            <Route path={`${match.path}/cast`} component={Cast}></Route>
+            <Route path={`${match.path}/reviews`} component={Reviews}></Route>
+          </Switch>
+        </Suspense>
+      </div>
+    )
   );
 };
 

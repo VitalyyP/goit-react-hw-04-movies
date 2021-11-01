@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, NavLink, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Loader from './components/Loader';
 import Navigation from './components/Navigation';
@@ -20,7 +20,6 @@ const App = () => (
           render={props => {
             return <MovieDetailsPage {...props} />;
           }}
-          // component={MovieDetailsPage}
         />
         <Route path="/movies" component={MoviesPage} />
         <Route component={NotFoundPage} />

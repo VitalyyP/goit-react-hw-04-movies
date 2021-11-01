@@ -6,32 +6,24 @@ async function fetchWithErrorHandling(url = '', config = {}) {
   return response.ok ? await response.json() : Promise.reject(new Error('Not found'));
 }
 
-function FetchApi() {
-  return fetch(`${BASE_URL}/trending/movie/day?api_key=${KEY_API}`).then(response =>
+export function FetchApi() {
+  return fetch(`${BASE_URL}/trending/movie/week?api_key=${KEY_API}`).then(response =>
     response.json(),
   );
 }
 
-function FetchSearchMovies(query) {
-  return fetch(`${BASE_URL}/search/movie?query=${query}&api_key=${KEY_API}`).then(response =>
-    response.json(),
-  );
+export function FetchSearchMovies(query) {
+  return fetchWithErrorHandling(`${BASE_URL}/search/movie?query=${query}&api_key=${KEY_API}`);
 }
 
 export function FetchMovieDetails(id) {
   return fetchWithErrorHandling(`${BASE_URL}/movie/${id}?api_key=${KEY_API}`);
 }
 
-function FetchMoviesCast(id) {
-  return fetch(`${BASE_URL}/movie/${id}/credits?api_key=${KEY_API}`).then(response =>
-    response.json(),
-  );
+export function FetchMovieCast(id) {
+  return fetchWithErrorHandling(`${BASE_URL}/movie/${id}/credits?api_key=${KEY_API}`);
 }
 
-function FetchMoviesReviews(id) {
-  return fetch(`${BASE_URL}/movie/${id}/reviews?api_key=${KEY_API}`).then(response =>
-    response.json(),
-  );
+export function FetchMovieReviews(id) {
+  return fetchWithErrorHandling(`${BASE_URL}/movie/${id}/reviews?api_key=${KEY_API}`);
 }
-
-// export { FetchApi, FetchMoviesDetail, FetchMoviesCast, FetchMoviesReviews, FetchSearchMovies };
